@@ -69,20 +69,20 @@ pub fn get_hash() -> io::Result<String> {
     stdin.lock().read_line(&mut password).unwrap();
   }
 
-  let output:String;
-
-  match args.algo {
+  let output:String = match args.algo {
     256 => {
         let mut hasher = Sha3_256::new();
         let _ = copy_wide_256(io::stdin().lock(), &mut hasher);
         let hash = hasher.finalize();
-        output = hex::encode(&hash);
+
+        hex::encode(&hash)
     },
     512 => {
         let mut hasher = Sha3_512::new();
         let _ = copy_wide_512(io::stdin().lock(), &mut hasher);
         let hash = hasher.finalize();
-        output = hex::encode(&hash);
+
+        hex::encode(&hash)
     },
     _ => {
         eprintln!("Unknown hash algorithm");
