@@ -45,18 +45,16 @@ fn get_hash() -> io::Result<String> {
     let mut password = args.input;
 
     if password.is_empty() {
-        let stdin = io::stdin();
-        stdin.lock().read_line(&mut password)?;
+        io::stdin().lock().read_line(&mut password)?;
     }
 
     let output: String = match args.algo {
-        256 => {
-            let mut hasher = Sha3_256::new();
-            let _ = copy_wide(io::stdin().lock(), &mut hasher);
-            hex::encode(hasher.finalize())
-        }
-        512 => {
-            let mut hasher = Sha3_512::new();
+        256 | 512 => {
+            let mut hasher = match args.algo {
+                256 => Sha3_256::new(),
+                512 => Sha3_512::new(),
+                _ => unreachable!(),
+            };
             let _ = copy_wide(io::stdin().lock(), &mut hasher);
             hex::encode(hasher.finalize())
         }
